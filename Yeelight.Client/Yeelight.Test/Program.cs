@@ -1,4 +1,6 @@
-﻿using Yeelight.Client;
+﻿using System;
+using System.ComponentModel;
+using Yeelight.Client;
 
 namespace Yeelight.Test
 {
@@ -24,7 +26,13 @@ namespace Yeelight.Test
              Console.WriteLine("Hello World!");
              Console.ReadKey();*/
 
-            YeelightDevice device = new YeelightDevice("1", "192.168.0.1", true, "strip", "bob");
+            YeelightDevice device;
+            device.PropertyChanged += delegate
+            {
+                Console.WriteLine("Property Changed");
+            };
+
+            Console.ReadKey();
         }
     }
 }
