@@ -1,38 +1,40 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.Linq;
+using System.Threading;
 using Yeelight.Client;
 
 namespace Yeelight.Test
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            /* TcpClient tcpClient = new TcpClient();
-             ;
-             tcpClient.Connect(new IPEndPoint(IPAddress.Parse("192.168.0.105"), 55443));
+            var discovery = new YeelightDiscovery();
 
-             if (tcpClient.Connected)
-             {
-                 var command = new StringBuilder(); // 0x0000000004d48562
-                 command.Append("{\"id\":");
-                 command.Append("0x0000000004d48562");
-                 command.Append(",\"method\":\"toggle\",\"params\":[]}\r\n");
+            var devices = discovery.DiscoverYeelights();
+            var client = new YeelightTcpClient(devices.First());
+            Thread.Sleep(5000);
+            client.Toggle().Wait();
+            Thread.Sleep(4000);
+            client.SetColorTemperature(4520).Wait();
+            Thread.Sleep(4000);
 
-                 var data = Encoding.ASCII.GetBytes(command.ToString());
-                 tcpClient.Client.Send(data);
-             }
+            client.SetRgbColor(204, 255, 102, 4000).Wait();
+            Thread.Sleep(4000);
 
-             Console.WriteLine("Hello World!");
-             Console.ReadKey();*/
+            client.SetRgbColor(255, 0, 0).Wait();
+            Thread.Sleep(4000);
 
-            YeelightDevice device;
-            device.PropertyChanged += delegate
-            {
-                Console.WriteLine("Property Changed");
-            };
+            client.SetHsvColor(255, 50, 2500).Wait();
+            Thread.Sleep(4000);
 
-            Console.ReadKey();
+            client.SetBrightness(10, 2500).Wait();
+            Thread.Sleep(4000);
+
+            client.SetPower(false).Wait();
+            Thread.Sleep(4000);
+
+            client.SetPower(true).Wait();
+            Thread.Sleep(4000);
         }
     }
 }

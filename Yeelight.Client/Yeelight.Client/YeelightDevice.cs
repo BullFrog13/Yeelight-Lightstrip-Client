@@ -1,55 +1,81 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net;
-using System.Runtime.CompilerServices;
+﻿using System.ComponentModel;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Yeelight.Client
 {
     public class YeelightDevice : INotifyPropertyChanged
     {
-        public const int Port = 554433;
+        public const int Port = 55443;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private bool _state;
+        private TcpClient _tcpClient;
 
         public string Id { get; set; }
         public string Ip { get; set; }
 
 
-        public bool State
+        /*public bool State
         {
             get => _state;
             set => SetField(ref _state, value);
-        }
+        }*/
         public string Model { get; set; }
         public string Name { get; set; }
 
-        public YeelightDevice(string id, string ip, bool state, string model, string name)
+        public YeelightDevice(string id, string ip)
         {
             Id = id;
             Ip = ip;
-            State = state;
-            Model = model;
-            Name = name;
+
+            // PropertyChanged += async (o, e) => await OnPropertyChanged((DevicePropertyChangedEventArgs)e);
         }
 
-        public IPEndPoint GetEndPoint()
+        /*public async Task<bool> Connect()
         {
-            return new IPEndPoint(IPAddress.Parse(Ip), Port);
+            Disconnect();
+
+            _tcpClient = new TcpClient();
+            await _tcpClient.ConnectAsync(Ip, 55443);
+
+            return _tcpClient.Connected;
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void Disconnect()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            if (_tcpClient != null)
+            {
+                _tcpClient.Close();
+                _tcpClient = null;
+            }
+        }*/
 
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+
+
+
+
+
+
+
+        /*protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;
             field = value;
-            OnPropertyChanged(propertyName);
+            PropertyChanged?.Invoke(this, new DevicePropertyChangedEventArgs(this, propertyName));
             return true;
         }
+
+        public async Task OnPropertyChanged(DevicePropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "State":
+                    await _tcpClient.Toggle(e.De  vice);
+                    break;
+                default:
+                    break;
+            }
+        }*/
     }
 }
